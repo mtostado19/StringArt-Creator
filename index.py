@@ -5,7 +5,7 @@ import cv2
 import math
 
 # MAIN 
-NUM_PINS = 300
+NUM_PINS = 150
 NUM_LINES = 6000
 THICKNESS = 1
 WIDTH = 300
@@ -14,20 +14,19 @@ SIZE = (WIDTH, HEIGHT)
 
 
 # GRAB IMAGE & CONVERT TO GRAYSCALE
-# img = np.asarray(Image.open('images/imgTest1.png'))
 img = Image.open('images/imgTest1.png').convert('L')
 img2 = np.asarray(img.resize(SIZE, Image.LANCZOS))
-# lum_img = img2[:, :, 0]
-imgplot = plt.imshow(img2, cmap="gray")
+
+# imgplot = plt.imshow(img2, cmap="gray")
 
 
 # SET PINS
 def setPins(nailCount, size):
     arrPins = []
     center = (size[0] // 2, size[1] // 2)
-    radius = size[0] // 2 - 50
-    print(center)
-    print(radius)
+    radius = size[0] // 2 - 10
+    # print(center)
+    # print(radius)
     for i in range(nailCount):
         angle = (2 * math.pi * i) / nailCount
         x = size[0] // 2 + radius * math.cos(angle)
@@ -37,9 +36,23 @@ def setPins(nailCount, size):
 
 arrPins = setPins(NUM_PINS, SIZE)
 print(arrPins)
-# GREEDY ALGORITHM
 
+# GREEDY ALGORITHM
+def exploreAllPaths():
+    return
+
+exploreAllPaths()
 
 # Show
-# plt.colorbar()
-# plt.show()
+for items in arrPins:
+    plt.scatter(items[0], items[1], marker="o", s=THICKNESS)
+
+#TEST LINES
+x= [arrPins[0][0], arrPins[50][0]]
+y = [arrPins[0][1], arrPins[50][1]]
+
+plt.plot(x,y, color='black')
+imgplot = plt.imshow(img2, cmap="gray")
+
+plt.colorbar()
+plt.show()
