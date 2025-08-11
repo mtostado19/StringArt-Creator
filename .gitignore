@@ -1,3 +1,4 @@
 /env
 /images/*
 /instructions.json
+/__pycache__
