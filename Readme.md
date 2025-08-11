@@ -58,3 +58,6 @@ pip install mathplotlib pillow numpy
 
 ## BRESENHAM LINE
 - https://saturncloud.io/blog/bresenham-line-algorithm-a-powerful-tool-for-efficient-line-drawing/
+
+## Image processing
+- https://www.youtube.com/watch?v=kSqxn6zGE0c

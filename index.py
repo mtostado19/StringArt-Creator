@@ -7,13 +7,13 @@ import math
 NUM_PINS = 250
 NUM_LINES = 2000
 THICKNESS = 1
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 1000
+HEIGHT = 1000
 SIZE = (WIDTH, HEIGHT)
 
 
 # GRAB IMAGE & CONVERT TO GRAYSCALE
-img = Image.open('images/test3.jpeg').convert('L')
+img = Image.open('images/test4.png').convert('L')
 img2 = img.resize(SIZE, Image.LANCZOS)
 # NORMALIZE ARRAY (0, 1)
 imgArr = np.asarray(img2, dtype=np.float32) / 255
@@ -98,13 +98,23 @@ def exploreAllPaths(arrPins, originalImg, NUM_LINES):
     draw = ImageDraw.Draw(solutionBoard)
     workingImg = originalImg.copy()
 
-    for _ in range(NUM_LINES):
+    # Simulation
+    plt.ion()
+    fig, ax = plt.subplots()
+    img_disp = ax.imshow(solutionBoard, cmap="gray", vmin=0, vmax=255)
+    plt.draw()
+
+    # Arr of instructions using pin index
+    arrFinalInstructions = []
+    bestPin = None
+
+    for numLines in range(NUM_LINES):
 
         nextNail = None
         highestContrast = -1
 
         # Find the best solution
-        for nail in arrPins:
+        for i, nail in enumerate(arrPins):
             if nail == currentNail:
                 continue
 
@@ -113,29 +123,36 @@ def exploreAllPaths(arrPins, originalImg, NUM_LINES):
             if contrast > highestContrast:
                 highestContrast = contrast
                 nextNail = nail
+                bestPin = i
 
         if nextNail == None:
             break
 
         arrNails.append(nextNail)
+        arrFinalInstructions.append(bestPin)
         #Draw the next nail
         draw.line([currentNail, nextNail], fill=0, width=THICKNESS)
 
         updateImage(currentNail, nextNail, workingImg)
+
+        img_disp.set_data(solutionBoard)
+        ax.set_xlabel("Lines: " + str(numLines))
+        plt.draw()
+        plt.pause(0.001)
         currentNail = nextNail
 
-    return arrNails, solutionBoard, workingImg
+    plt.ioff()
+    return arrNails, solutionBoard, workingImg, arrFinalInstructions
 
-arrNails, solutionBoard, workingImg = exploreAllPaths(arrPins, imgArr, NUM_LINES)
+arrNails, solutionBoard, workingImg, instructions = exploreAllPaths(arrPins, imgArr, NUM_LINES)
 
+print(instructions)
 # Show circumference
-for items in arrPins:
-    plt.scatter(items[0], items[1], marker="o", s=THICKNESS)
+# for items in arrPins:
+#     plt.scatter(items[0], items[1], marker="o", s=THICKNESS)
 
 
-test = np.asarray(solutionBoard)
+# imgplot = plt.imshow(solutionBoard, cmap="gray")
 
-imgplot = plt.imshow(solutionBoard, cmap="gray")
-
-plt.colorbar()
+plt.ioff()
 plt.show()
