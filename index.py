@@ -2,13 +2,15 @@ from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import json
+from pathlib import Path
 
 # MAIN 
-NUM_PINS = 250
-NUM_LINES = 2000
+NUM_PINS = 300
+NUM_LINES = 50
 THICKNESS = 1
-WIDTH = 1000
-HEIGHT = 1000
+WIDTH = 800
+HEIGHT = 800
 SIZE = (WIDTH, HEIGHT)
 
 
@@ -136,7 +138,7 @@ def exploreAllPaths(arrPins, originalImg, NUM_LINES):
         updateImage(currentNail, nextNail, workingImg)
 
         img_disp.set_data(solutionBoard)
-        ax.set_xlabel("Lines: " + str(numLines))
+        ax.set_xlabel("Lines: " + str(numLines + 1))
         plt.draw()
         plt.pause(0.001)
         currentNail = nextNail
@@ -146,13 +148,15 @@ def exploreAllPaths(arrPins, originalImg, NUM_LINES):
 
 arrNails, solutionBoard, workingImg, instructions = exploreAllPaths(arrPins, imgArr, NUM_LINES)
 
-print(instructions)
-# Show circumference
-# for items in arrPins:
-#     plt.scatter(items[0], items[1], marker="o", s=THICKNESS)
+# print(instructions)
+file_path = Path("instructions.json")
+# text = { "name": "Amy"}
 
-
-# imgplot = plt.imshow(solutionBoard, cmap="gray")
+if file_path.is_file():
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump({ "arr": instructions }, f)
+else:
+    print("File not found")
 
 plt.ioff()
 plt.show()
