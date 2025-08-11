@@ -1,7 +1,6 @@
-from PIL import Image, ImageOps, ImageDraw
+from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
 import numpy as np
-import cv2
 import math
 
 # MAIN 
