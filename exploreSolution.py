@@ -5,6 +5,8 @@ import math
 import config
 
 class Solution():
+
+    allBresenhamLines = {}
     def bresenham_line(self, nail1, nail2):
 
         x1, y1 = nail1
@@ -38,9 +40,16 @@ class Solution():
 
         return pixels
     
+    def computeAllBresenhamLines(self, arrPins):
+        for pin1 in arrPins:
+            for pin2 in arrPins:
+                if pin1 != pin2:
+                    pixels = self.bresenham_line(pin1, pin2)
+                    self.allBresenhamLines[pin1, pin2] = pixels
+    
     def calculateScore(self, nail1, nail2, workingImg):
 
-        pixels = self.bresenham_line(nail1, nail2)
+        pixels = self.allBresenhamLines[nail1, nail2]
 
         if not pixels:
             return 0.0
@@ -54,7 +63,7 @@ class Solution():
         return totalContrast / len(pixels)
     
     def updateImage(self, nail1, nail2, workingImg):
-        pixels = self.bresenham_line(nail1, nail2)
+        pixels = self.allBresenhamLines[nail1, nail2]
         bright = 0.5
         for x, y in pixels:
             pixelIndex = workingImg[y,x]
@@ -64,6 +73,8 @@ class Solution():
     
     # GREEDY ALGORITHM
     def exploreAllPaths(self, arrPins, originalImg, NUM_LINES):
+
+        self.computeAllBresenhamLines(arrPins)
 
         currentNail = arrPins[0]
         arrNails = [currentNail]
