@@ -29,46 +29,38 @@ class Solution():
         y = y1
         ystep = 1 if y1 < y2 else -1
 
-        pixels = []
+        test1 = []
+        test2 = []
         for x in range(x1, x2 + 1):
             coord = (y, x) if slope else (x, y)
-            pixels.append(coord)
+            test1.append(coord[0])
+            test2.append(coord[1])
             error -= dy
             if error < 0:
                 y += ystep
                 error += dx
 
-        return pixels
+        return np.array(test1), np.array(test2)
     
     def computeAllBresenhamLines(self, arrPins):
         for pin1 in arrPins:
             for pin2 in arrPins:
                 if pin1 != pin2:
-                    pixels = self.bresenham_line(pin1, pin2)
-                    self.allBresenhamLines[pin1, pin2] = pixels
+                    x, y = self.bresenham_line(pin1, pin2)
+                    self.allBresenhamLines[pin1, pin2] = x, y
     
     def calculateScore(self, nail1, nail2, workingImg):
 
-        pixels = self.allBresenhamLines[nail1, nail2]
+        x, y = self.allBresenhamLines[nail1, nail2]
+        pixelsIndex = workingImg[y,x]
+        darkness = 1.0 - pixelsIndex
 
-        if not pixels:
-            return 0.0
-
-        totalContrast = 0
-        for x, y in pixels:
-            pixelIndex = workingImg[y, x]
-            darkness = 1.0 - pixelIndex
-            totalContrast += darkness
-
-        return totalContrast / len(pixels)
+        return darkness.mean()
     
     def updateImage(self, nail1, nail2, workingImg):
-        pixels = self.allBresenhamLines[nail1, nail2]
-        bright = 0.5
-        for x, y in pixels:
-            pixelIndex = workingImg[y,x]
-            newVal = min(1.0, pixelIndex + bright)
-            workingImg[y,x] = newVal
+        x, y = self.allBresenhamLines[nail1, nail2]
+        bright = 0.3
+        workingImg[y,x] = np.minimum(1.0, workingImg[y,x] + bright)
         return workingImg
     
     # GREEDY ALGORITHM
@@ -84,17 +76,16 @@ class Solution():
 
         # Simulation
         plt.ion()
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(10,10))
         img_disp = ax.imshow(solutionBoard, cmap="gray", vmin=0, vmax=255)
         plt.draw()
 
         # Arr of instructions using pin index
         arrFinalInstructions = []
-        bestPin = None
 
         for numLines in range(NUM_LINES):
 
-            nextNail = None
+            nextNail, bestPin = None, None
             highestContrast = -1
 
             # Find the best solution
@@ -115,14 +106,15 @@ class Solution():
             arrNails.append(nextNail)
             arrFinalInstructions.append(bestPin)
             #Draw the next nail
-            draw.line([currentNail, nextNail], fill=0, width=config.THICKNESS)
+            draw.line([currentNail, nextNail], fill=50, width=config.THICKNESS)
 
             self.updateImage(currentNail, nextNail, workingImg)
 
-            img_disp.set_data(solutionBoard)
-            ax.set_xlabel("Lines: " + str(numLines + 1))
-            plt.draw()
-            plt.pause(0.001)
+            if numLines % 100 == 0 or numLines == NUM_LINES - 1:
+                img_disp.set_data(solutionBoard)
+                ax.set_xlabel("Lines: " + str(numLines + 1))
+                plt.draw()
+                plt.pause(0.001)
             currentNail = nextNail
 
         plt.ioff()

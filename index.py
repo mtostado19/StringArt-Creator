@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import config
+import traceback
 from pathlib import Path
 from createPins import CreatePins
 from exploreSolution import Solution
@@ -36,6 +37,7 @@ def main():
     except Exception as e:
         print("Error, oh well")
         print(e)
+        traceback.print_exc()
 
 if __name__ == '__main__':
     main()
