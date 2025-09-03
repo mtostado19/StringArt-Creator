@@ -59,7 +59,7 @@ class Solution():
     
     def updateImage(self, nail1, nail2, workingImg):
         x, y = self.allBresenhamLines[nail1, nail2]
-        bright = 0.3
+        bright = 0.45
         workingImg[y,x] = np.minimum(1.0, workingImg[y,x] + bright)
         return workingImg
     
@@ -106,11 +106,11 @@ class Solution():
             arrNails.append(nextNail)
             arrFinalInstructions.append(bestPin)
             #Draw the next nail
-            draw.line([currentNail, nextNail], fill=50, width=config.THICKNESS)
+            draw.line([currentNail, nextNail], fill=0, width=config.THICKNESS)
 
             self.updateImage(currentNail, nextNail, workingImg)
 
-            if numLines % 100 == 0 or numLines == NUM_LINES - 1:
+            if numLines % 20 == 0 or numLines == NUM_LINES - 1:
                 img_disp.set_data(solutionBoard)
                 ax.set_xlabel("Lines: " + str(numLines + 1))
                 plt.draw()
@@ -118,4 +118,5 @@ class Solution():
             currentNail = nextNail
 
         plt.ioff()
+        # solutionBoard.show()
         return arrNails, arrFinalInstructions

@@ -14,7 +14,7 @@ python -m venv /path/to/new/virtual/environment
 ```
 Initiallize the environment
 ```bash
-env\Scripts\activate.bat
+.\env\Scripts\activate.bat
 ```
 
 ### Permissions
@@ -47,6 +47,18 @@ pip install mathplotlib pillow numpy
 - numpy
 
 
+# Run Program
+- Put an image inside the "images" Folder.
+- Inside index.py, change the variable "img" to grab the image you want to use.
+- run the following command:
+```bash
+python index.py
+```
+
+To save and visualize an already existing solution run the following command:
+```bash
+python visualizeResponse.py
+```
 ## ALL REFERENCES USED
 
 ### STRING ART

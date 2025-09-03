@@ -1,4 +1,5 @@
 /env
 /images/*
-/instructions.json
+# /instructions.json
 /__pycache__
+/finalImage.png
